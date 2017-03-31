@@ -11,7 +11,7 @@ type MediaInfo struct {
 	Body  []byte
 }
 
-func loadPage(title string) (*MediaInfo, error) {
+func loadMediaFile(title string) (*MediaInfo, error) {
 	filename := title
 	body, err := ioutil.ReadFile(filename)
 	if err != nil {
@@ -23,12 +23,11 @@ func loadPage(title string) (*MediaInfo, error) {
 func viewHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Add("Content-Type", "video/webm")
 	title := r.URL.Path[len("/view/"):]
-	p, _ := loadPage(title)
+	p, _ := loadMediaFile(title)
 	fmt.Fprintf(w, "%s", p.Body)
-
 }
 
 func main() {
-	http.HandleFunc("/view/", viewHandler)
+	http.HandleFunc("/view/", htmlHandler)
 	http.ListenAndServe(":8080", nil)
 }
